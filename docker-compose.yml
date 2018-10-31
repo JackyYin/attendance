@@ -1,0 +1,71 @@
+version: "3.5"
+
+services:
+
+  web:
+    image: attendance
+    container_name: attendance_web
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - backend_network
+      - proxy_network
+    logging:
+        driver: "json-file"
+        options:
+            max-size: "2000k"
+            max-file: "30"
+
+  db:
+    image: mysql:5.7
+    container_name: attendance_db
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend_network
+
+  redis:
+    image: redis
+    container_name: attendance_redis
+    command: redis-server --appendonly yes
+    restart: always
+    networks:
+      - backend_network
+    volumes:
+      - redis_data:/data
+
+  adminer:
+    image: clue/adminer
+    container_name: attendance_adminer
+    restart: always
+    environment:
+      VIRTUAL_HOST: "${ADMINER_HOST}"
+      VIRTUAL_PORT: "${ADMINER_PORT}"
+    networks:
+      - backend_network
+      - proxy_network
+
+volumes:
+  db_data:
+    name: attendance_database
+  redis_data:
+    name: attendance_redis
+
+networks:
+  backend_network:
+    driver: bridge
+    name: attendance_backend
+  proxy_network:
+    external:
+      name: proxy_network
