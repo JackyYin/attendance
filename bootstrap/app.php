@@ -26,7 +26,7 @@ $app = new Laravel\Lumen\Application(
 $app->configure('app');
 $app->configure('queue');
 $app->configure('auth');
-$app->configure('jwt-auth');
+$app->configure('jwt');
 
 $app->withFacades();
 
@@ -104,9 +104,16 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+    'namespace' => 'App\Http\Controllers\Web',
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
+});
+
+$app->router->group([
+    'namespace' => 'App\Http\Controllers\Api',
+    'prefix' => 'api'
+], function ($router) {
+    require __DIR__.'/../routes/api.php';
 });
 
 return $app;
