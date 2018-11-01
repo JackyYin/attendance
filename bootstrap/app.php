@@ -25,6 +25,8 @@ $app = new Laravel\Lumen\Application(
 
 $app->configure('app');
 $app->configure('queue');
+$app->configure('auth');
+$app->configure('jwt-auth');
 
 $app->withFacades();
 
@@ -82,12 +84,14 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(SwooleTW\Http\LumenServiceProvider::class);
 
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
