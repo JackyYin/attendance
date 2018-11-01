@@ -67,19 +67,22 @@ RUN ln -s /etc/php/7.3/mods-available/redis.ini 20-redis.ini \
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
-### Additional Deamon ###
+### Additional Process ###
 
-# Adding additional nginx daemon
+# Adding additional nginx process
 RUN mkdir /etc/service/nginx
 COPY ./config/docker/service/nginx.sh /etc/service/nginx/run
 RUN chmod +x /etc/service/nginx/run
 
-# Adding additional php-fpm daemon
+# Adding additional swoole process
 RUN mkdir /etc/service/swoole
 COPY ./config/docker/service/swoole.sh /etc/service/swoole/run
 RUN chmod +x /etc/service/swoole/run
 
-# Adding additional laravel-worker daemon
+# Adding additional queue-worker process
+RUN mkdir /etc/service/queue-worker
+COPY ./config/docker/service/queue-worker.sh /etc/service/queue-worker/run
+RUN chmod +x /etc/service/queue-worker/run
 
 ### First Level Startup Process ###
 
