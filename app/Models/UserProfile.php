@@ -2,22 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class UserProfile extends Model
 {
-    use Authenticatable, Authorizable;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'user_profile';
 
     /**
      * The attributes that aren't mass assignable.
@@ -38,10 +33,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
-    public function profile()
+    public function user()
     {
-        return $this->hasOne(UserProfile::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
 }
