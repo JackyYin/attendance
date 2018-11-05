@@ -16,7 +16,7 @@ class CreateCompanyProfileTable extends Migration
         Schema::create('company_profile', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('company_id');
-            $table->string('name')->nullable();
+            $table->string('name', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('company_id')
