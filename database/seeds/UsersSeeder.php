@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Agent;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('UsersSeeder');
+        factory(App\Models\User::class)->create();
     }
 }
