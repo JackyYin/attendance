@@ -35,6 +35,16 @@ class UserProfile extends Model
      */
     public $timestamps = true;
 
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat() : string
+    {
+        return 'U';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

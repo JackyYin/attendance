@@ -17,7 +17,8 @@ class CreateCompanyProfileTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('company_id');
             $table->string('name', 50)->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('created_at')->nullable();
+            $table->unsignedInteger('updated_at')->nullable();
 
             $table->foreign('company_id')
                 ->references('id')->on('companies')

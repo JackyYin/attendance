@@ -35,6 +35,16 @@ class CompanyProfile extends Model
      */
     public $timestamps = true;
 
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat() : string
+    {
+        return 'U';
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
