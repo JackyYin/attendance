@@ -15,7 +15,7 @@ class AddDepartmentIdToUsersTable extends Migration
     {
         if (!Schema::hasColumn('users', 'department_id')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->unsignedInteger('department_id');
+                $table->unsignedInteger('department_id')->after('company_id');
 
                 $table->foreign('department_id')
                     ->references('id')->on('departments')
