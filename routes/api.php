@@ -14,11 +14,11 @@
 $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->group(['middleware' => 'custom-jwt-agent'], function () use ($router) {
         $router->post('login', ['uses' => 'AuthController@authenticate']);
+        $router->post('logout', ['uses' => 'AuthController@logout']);
+        $router->post('refresh', ['uses' => 'AuthController@refresh']);
     });
 
     $router->group(['middleware' => 'custom-jwt-user'], function () use ($router) {
-        $router->post('logout', ['uses' => 'AuthController@logout']);
-        $router->post('refresh', ['uses' => 'AuthController@refresh']);
         $router->get('me', ['uses' => 'AuthController@me']);
     });
 });
