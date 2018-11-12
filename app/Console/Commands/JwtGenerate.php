@@ -59,7 +59,9 @@ class JwtGenerate extends Command
         } catch (\Exception $e) {
             $this->error('could_not_create_token');
         }
-        $this->info($token);
+        $this->info('access_token: '.$token);
+        $this->info('token_type: Bearer');
+        $this->info('expires_in: '.$this->jwt->factory()->getTTL() * 60);
     }
 }
 
