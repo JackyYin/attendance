@@ -2,14 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\JWTAuth;
 
-class CustomJWTAuth
+class CustomJWTUser
 {
+    const MODEL = User::class;
     /**
      * The authentication guard factory instance.
      *
@@ -45,6 +47,14 @@ class CustomJWTAuth
             ], 401);
         }
 
+        if ($this->jwt->getPayload()->get('model') !== self::MODEL) {
+            return response()->json([
+                'auth' => [
+                    'Token Model Type Error.'
+                ]
+            ], 401);
+        }
+
         try {
             $user = $this->jwt->authenticate($token);
         } catch (TokenExpiredException $e) {
@@ -69,6 +79,14 @@ class CustomJWTAuth
             return response()->json([
                 'auth' => [
                    $e->getMessage()
+                ]
+            ], 401);
+        }
+
+        if (!$user) {
+            return response()->json([
+                'auth' => [
+                   'User Not Found.'
                 ]
             ], 401);
         }

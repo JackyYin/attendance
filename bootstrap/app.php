@@ -70,7 +70,8 @@ $app->singleton(
 
 $app->routeMiddleware([
 //    'auth' => App\Http\Middleware\Authenticate::class,
-    'custom-jwt' => App\Http\Middleware\CustomJWTAuth::class
+    'custom-jwt-user' => App\Http\Middleware\CustomJWTUser::class,
+    'custom-jwt-agent' => App\Http\Middleware\CustomJWTAgent::class
 ]);
 
 /*
