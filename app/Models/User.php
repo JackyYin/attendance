@@ -43,7 +43,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public $timestamps = false;
 
-   /**
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -53,16 +53,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->getKey();
     }
 
-     /**
+    /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
      * @return array
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return [
+            'model' => get_class($this)
+        ];
     }
-
 
     public function profile()
     {
