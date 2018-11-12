@@ -5,43 +5,28 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Agent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\JWTAuth;
-//use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
 
 class AuthController extends Controller
 {
-    protected $jwt;
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct(JWTAuth $jwt)
-    {
-        $this->jwt = $jwt;
-    }
-
     public function authenticate(Request $request)
     {
+        $this->validate($request, [
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required'
+        ]);
+
         $credentials = [
-            'email' => 'kadin56@gmail.com',
-            'password' => 12345678
+            'email' => $request->email,
+            'password' => $request->password
         ];
 
         $customClaims = [
-            // 用token判斷
-            'agents' => Agent::first() ? Agent::first()->name : 'App',
+            'agents' => $this->user()->name,
             // api or web or admin
             'interface' => 'api',
         ];
 
         try {
-            //example: 修改token TTL (in minutes)
-            $this->jwt->factory()->setTTL(1);
-
             // attempt to verify the credentials and create a token for the user
             if (! $token = $this->jwt->claims($customClaims)->attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
@@ -54,7 +39,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'Bearer',
-            'expires_in'   => $this->jwt->factory()->getTTL()*60
+            'expires_in'   => $this->jwt->factory()->getTTL() * 60
         ]);
     }
 
@@ -83,8 +68,5 @@ class AuthController extends Controller
         return response()->json([
             'user' => $this->jwt->user()
         ]);
-
-        dump($this->jwt->parseToken()->authenticate());
-        dump($this->jwt->parseToken()->getPayload());
     }
 }
