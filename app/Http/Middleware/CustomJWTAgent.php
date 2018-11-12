@@ -42,17 +42,7 @@ class CustomJWTAgent
         if (! $token = $this->jwt->setRequest($request)->getToken()) {
             return response()->json([
                 'auth' => [
-                    'Token Not Provided.'
-                ]
-            ], 401);
-        }
-
-        $payload = $this->jwt->getPayload();
-
-        if ($payload->get('model') !== self::MODEL) {
-            return response()->json([
-                'auth' => [
-                    'Token Model Type Error.'
+                    'Agent Token Not Provided.'
                 ]
             ], 401);
         }
@@ -62,13 +52,13 @@ class CustomJWTAgent
         } catch (TokenExpiredException $e) {
             return response()->json([
                 'auth' => [
-                    'Token Expired.'
+                    'Agent Token Expired.'
                 ]
             ], 401);
         } catch (TokenBlacklistedException $e) {
             return response()->json([
                 'auth' => [
-                    'Token Invalidated.'
+                    'Agent Token Invalidated.'
                 ]
             ], 401);
         } catch (JWTException $e) {
@@ -81,6 +71,16 @@ class CustomJWTAgent
             return response()->json([
                 'auth' => [
                    $e->getMessage()
+                ]
+            ], 401);
+        }
+
+        $payload = $this->jwt->getPayload();
+
+        if ($payload->get('model') !== self::MODEL) {
+            return response()->json([
+                'auth' => [
+                    'Agent Token Model Type Error.'
                 ]
             ], 401);
         }

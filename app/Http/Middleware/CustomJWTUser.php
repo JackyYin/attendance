@@ -42,15 +42,7 @@ class CustomJWTUser
         if (! $token = $this->jwt->setRequest($request)->getToken()) {
             return response()->json([
                 'auth' => [
-                    'Token Not Provided.'
-                ]
-            ], 401);
-        }
-
-        if ($this->jwt->getPayload()->get('model') !== self::MODEL) {
-            return response()->json([
-                'auth' => [
-                    'Token Model Type Error.'
+                    'User Token Not Provided.'
                 ]
             ], 401);
         }
@@ -60,13 +52,13 @@ class CustomJWTUser
         } catch (TokenExpiredException $e) {
             return response()->json([
                 'auth' => [
-                    'Token Expired.'
+                    'User Token Expired.'
                 ]
             ], 401);
         } catch (TokenBlacklistedException $e) {
             return response()->json([
                 'auth' => [
-                    'Token Invalidated.'
+                    'User Token Invalidated.'
                 ]
             ], 401);
         } catch (JWTException $e) {
@@ -79,6 +71,14 @@ class CustomJWTUser
             return response()->json([
                 'auth' => [
                    $e->getMessage()
+                ]
+            ], 401);
+        }
+
+        if ($this->jwt->getPayload()->get('model') !== self::MODEL) {
+            return response()->json([
+                'auth' => [
+                    'User Token Model Type Error.'
                 ]
             ], 401);
         }
