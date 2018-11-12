@@ -20,16 +20,19 @@ class Controller extends BaseController
 
     public function user()
     {
-        $payload = $this->jwt->getPayload();
+        $model = $this->payload()->get('model');
 
-        $model = $payload->get('model');
-
-        $id = $payload->get('sub');
+        $id = $this->payload()->get('sub');
 
         if (!$model || !$id) {
             return false;
         }
 
         return $model::find($id);
+    }
+
+    public function payload()
+    {
+        return $this->jwt->getPayload();
     }
 }
