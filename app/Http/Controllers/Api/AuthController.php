@@ -24,7 +24,7 @@ class AuthController extends Controller
         ];
 
         $customClaims = [
-            'agent' => $this->user()->name,
+            'agent_id' => $this->user()->id,
             // api or web or admin
             'interface' => 'api',
         ];
@@ -52,32 +52,10 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        $user = $this->user();
-
-        try {
-            if ($this->jwt->setToken($request->token)->getPayload()->get('agent') != $user->name) {
-                return response()->json([
-                    'auth' => [
-                        'Unauthorized Agent.'
-                    ]
-                ], 401);
-            }
-        } catch (TokenExpiredException $e) {
+        if (!$this->checkAgent($request->token, $this->user())) {
             return response()->json([
                 'auth' => [
-                    'User Token Expired.'
-                ]
-            ], 401);
-        } catch (TokenBlacklistedException $e) {
-            return response()->json([
-                'auth' => [
-                    'User Token Invalidated.'
-                ]
-            ], 401);
-        } catch (\Exception $e) {
-            return response()->json([
-                'auth' => [
-                   $e->getMessage()
+                    'Unauthorized Agent.'
                 ]
             ], 401);
         }
@@ -95,32 +73,10 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        $user = $this->user();
-
-        try {
-            if ($this->jwt->setToken($request->token)->getPayload()->get('agent') != $user->name) {
-                return response()->json([
-                    'auth' => [
-                        'Unauthorized Agent.'
-                    ]
-                ], 401);
-            }
-        } catch (TokenExpiredException $e) {
+        if (!$this->checkAgent($request->token, $this->user())) {
             return response()->json([
                 'auth' => [
-                    'User Token Expired.'
-                ]
-            ], 401);
-        } catch (TokenBlacklistedException $e) {
-            return response()->json([
-                'auth' => [
-                    'User Token Invalidated.'
-                ]
-            ], 401);
-        } catch (\Exception $e) {
-            return response()->json([
-                'auth' => [
-                   $e->getMessage()
+                    'Unauthorized Agent.'
                 ]
             ], 401);
         }
@@ -137,7 +93,7 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json([
-            'user' => $this->jwt->user()
+            'user' => $this->user()
         ]);
     }
 }
