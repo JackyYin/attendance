@@ -32,11 +32,19 @@ class AuthController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = $this->jwt->claims($customClaims)->attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return response()->json([
+                    'auth' => [
+                        'invalid_credentials'
+                    ]
+                ], 401);
             }
         } catch (\Exception $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json([
+                'auth' => [
+                    'could_not_create_token'
+                ]
+            ], 401);
         }
 
         return response()->json([
