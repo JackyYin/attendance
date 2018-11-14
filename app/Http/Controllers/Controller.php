@@ -49,13 +49,9 @@ class Controller extends BaseController
 
     public function checkAgent($userToken, Agent $agent) : bool
     {
-        try {
-            $this->jwt->setToken($userToken);
+        $this->jwt->setToken($userToken);
 
-            if ($this->payload()->get('agent_id') != $agent->id) {
-                return false;
-            }
-        } catch (\Exception $e) {
+        if ($this->payload()->get('agent_id') != $agent->id) {
             return false;
         }
 

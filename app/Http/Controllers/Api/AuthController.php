@@ -38,6 +38,7 @@ class AuthController extends Controller
                 ], 401);
             }
         } catch (\Exception $e) {
+            dump($e);
             return response()->json([
                 'auth' => [
                     'could_not_create_token'
@@ -58,10 +59,18 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        if (!$this->checkAgent($request->token, $request->user)) {
+        try {
+            if (!$this->checkAgent($request->token, $request->user)) {
+                return response()->json([
+                    'auth' => [
+                        'Unauthorized Agent.'
+                    ]
+                ], 401);
+            }
+        }  catch (TokenExpiredException $e) {
             return response()->json([
                 'auth' => [
-                    'Unauthorized Agent.'
+                    'User Token Expired.'
                 ]
             ], 401);
         }
@@ -79,10 +88,18 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        if (!$this->checkAgent($request->token, $request->user)) {
+        try {
+            if (!$this->checkAgent($request->token, $request->user)) {
+                return response()->json([
+                    'auth' => [
+                        'Unauthorized Agent.'
+                    ]
+                ], 401);
+            }
+        }  catch (TokenBlacklistedException $e) {
             return response()->json([
                 'auth' => [
-                    'Unauthorized Agent.'
+                    'User Token Invalidated.'
                 ]
             ], 401);
         }
