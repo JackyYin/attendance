@@ -93,6 +93,10 @@ class CustomJWTAgent
             ], 401);
         }
 
+        $request->merge([
+            'user' => $agent
+        ]);
+
         return $next($request);
     }
 }

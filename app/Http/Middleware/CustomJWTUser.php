@@ -91,6 +91,10 @@ class CustomJWTUser
             ], 401);
         }
 
+        $request->merge([
+            'user' => $user
+        ]);
+
         return $next($request);
     }
 }

@@ -24,13 +24,12 @@ class AuthController extends Controller
         ];
 
         $customClaims = [
-            'agent_id' => $this->user()->id,
+            'agent_id' => $request->user ? $request->user->id : 0,
             // api or web or admin
             'interface' => 'api',
         ];
 
         try {
-            // attempt to verify the credentials and create a token for the user
             if (! $token = $this->jwt->claims($customClaims)->attempt($credentials)) {
                 return response()->json([
                     'auth' => [
@@ -39,7 +38,6 @@ class AuthController extends Controller
                 ], 401);
             }
         } catch (\Exception $e) {
-            // something went wrong whilst attempting to encode the token
             return response()->json([
                 'auth' => [
                     'could_not_create_token'
@@ -60,7 +58,7 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        if (!$this->checkAgent($request->token, $this->user())) {
+        if (!$this->checkAgent($request->token, $request->user)) {
             return response()->json([
                 'auth' => [
                     'Unauthorized Agent.'
@@ -81,7 +79,7 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        if (!$this->checkAgent($request->token, $this->user())) {
+        if (!$this->checkAgent($request->token, $request->user)) {
             return response()->json([
                 'auth' => [
                     'Unauthorized Agent.'
@@ -98,10 +96,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me()
+    public function me(Request $request)
     {
         return response()->json([
-            'user' => $this->user()
+            'user' => $request->user
         ]);
     }
 }
