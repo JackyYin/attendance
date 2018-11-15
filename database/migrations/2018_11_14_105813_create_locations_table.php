@@ -19,8 +19,8 @@ class CreateLocationsTable extends Migration
                 $table->unsignedInteger('company_id');
                 $table->unsignedInteger('department_id');
                 $table->string('name', 50)->nullable();
-                $table->string('latitude')->nullable();
-                $table->string('longitude')->nullable();
+                $table->string('latitude', 50)->nullable();
+                $table->string('longitude', 50)->nullable();
                 $table->string('address')->nullable();
                 $table->unsignedInteger('legal_distance')->default(100)->comment('允許打卡距離(公尺)');
                 $table->unsignedInteger('created_at')->nullable();
