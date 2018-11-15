@@ -77,7 +77,7 @@ $factory->afterCreating(App\Models\Company::class, function ($company, $faker) {
 
 $factory->define(App\Models\Agent::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->word,
         'auth_hook_url' => $faker->url
     ];
 });
@@ -101,11 +101,32 @@ $factory->afterCreating(App\Models\User::class, function ($user, $faker) {
         'on_board_date' => $faker->unixTime($max = 'now')
     ]);
 
-    $agent = factory(App\Models\Agent::class)->create();
-
-    $user->agents()->attach($agent, [
-        'email_auth_token' => Hash::make($faker->word)
+    \App\Models\Agent::insert([
+        [
+            'name' => 'App',
+            'auth_hook_url' => $faker->url
+        ],
+        [
+            'name' => 'Line',
+            'auth_hook_url' => $faker->url
+        ],
+        [
+            'name' => 'Stride',
+            'auth_hook_url' => $faker->url
+        ],
+        [
+            'name' => 'Discord',
+            'auth_hook_url' => $faker->url
+        ],
     ]);
+
+    $agents = \App\Models\Agent::inRandomOrder()->get();
+
+    foreach ($agents as $agent) {
+        $user->agents()->attach($agent, [
+            'email_auth_token' => Hash::make($faker->word)
+        ]);
+    }
 
     $role = $user->department->roles()->first();
 
