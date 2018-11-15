@@ -33,7 +33,7 @@ class Role extends Model
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * Get the format for database stored dates.
