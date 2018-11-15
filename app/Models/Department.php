@@ -54,4 +54,9 @@ class Department extends Model
     {
         return $this->hasMany(Location::class, 'department_id', 'id');
     }
+
+    public function scopeMaster($query)
+    {
+        return $query->whereNull('parent_id');
+    }
 }

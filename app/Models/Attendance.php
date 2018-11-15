@@ -28,6 +28,23 @@ class Attendance extends Model
     protected $hidden = [];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'punched_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    /**
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
