@@ -31,16 +31,46 @@ $factory->afterCreating(App\Models\Company::class, function ($company, $faker) {
 
     $department->roles()->createMany([
         [
+            'company_id' => $department->company->id,
             'name' => '主管',
             'priority' => 1
         ],
         [
+            'company_id' => $department->company->id,
             'name' => '管理員',
             'priority' => 2
         ],
         [
+            'company_id' => $department->company->id,
             'name' => '員工',
             'priority' => 3
+        ],
+    ]);
+
+    $department->locations()->createMany([
+        [
+            'company_id' => $department->company->id,
+            'name' => '家樂福桂林店',
+            'latitude' => '25.038854',
+            'longitude' => '121.505592',
+            'address' => '108台北市萬華區桂林路1號',
+            'legal_distance' => 200
+        ],
+        [
+            'company_id' => $department->company->id,
+            'name' => '家樂福便利購台北濟南店Carrefour Market Taipei Jinan Store',
+            'latitude' => '25.041514',
+            'longitude' => '121.531015',
+            'address' => '100台北市中正區濟南路二段46號',
+            'legal_distance' => 300
+        ],
+        [
+            'company_id' => $department->company->id,
+            'name' => '家樂福重慶店Carrefour Chung Qing Store',
+            'latitude' => '25.061844',
+            'longitude' => '121.514236',
+            'address' => '103台北市大同區重慶北路二段171號',
+            'legal_distance' => 100
         ],
     ]);
 });
