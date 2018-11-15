@@ -17,3 +17,15 @@ logs:
 reload:
 	$(SOURCE_ENV) \
 	docker exec -it $$DOCKER_CONTAINER_NAME php artisan swoole:http reload
+
+migrate:
+	$(SOURCE_ENV) \
+	docker exec -it $$DOCKER_CONTAINER_NAME php artisan migrate
+
+migrate-refresh:
+	$(SOURCE_ENV) \
+	docker exec -it $$DOCKER_CONTAINER_NAME php artisan migrate:refresh
+
+migrate-rollback:
+	$(SOURCE_ENV) \
+	docker exec -it $$DOCKER_CONTAINER_NAME php artisan migrate:rollback
