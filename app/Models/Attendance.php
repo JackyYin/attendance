@@ -25,7 +25,11 @@ class Attendance extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'user_id',
+        'department_id',
+        'company_id'
+    ];
 
     /**
      * The attributes that should be cast to native types.

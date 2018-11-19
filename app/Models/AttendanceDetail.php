@@ -38,7 +38,9 @@ class AttendanceDetail extends Model
      */
     protected $hidden = [
         'id',
-        'attendance_id'
+        'attendance_id',
+        'created_at',
+        'updated_at'
     ];
 
     /**
