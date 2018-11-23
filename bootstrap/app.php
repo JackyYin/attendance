@@ -27,6 +27,7 @@ $app->configure('app');
 $app->configure('queue');
 $app->configure('auth');
 $app->configure('jwt');
+$app->configure('session');
 
 $app->withFacades();
 
@@ -53,6 +54,10 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->bind(\Illuminate\Session\SessionManager::class, function () use ($app) {
+    return new \Illuminate\Session\SessionManager($app);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -64,14 +69,14 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    \Illuminate\Session\Middleware\StartSession::class,
+]);
 
 $app->routeMiddleware([
 //    'auth' => App\Http\Middleware\Authenticate::class,
-    'custom-jwt-user' => App\Http\Middleware\CustomJWTUser::class,
-    'custom-jwt-agent' => App\Http\Middleware\CustomJWTAgent::class
+    'custom-jwt-user'  => App\Http\Middleware\CustomJWTUser::class,
+    'custom-jwt-agent' => App\Http\Middleware\CustomJWTAgent::class,
 ]);
 
 /*
@@ -94,6 +99,8 @@ $app->register(SwooleTW\Http\LumenServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -116,6 +123,13 @@ $app->router->group([
     'prefix' => 'api'
 ], function ($router) {
     require __DIR__.'/../routes/api.php';
+});
+
+$app->router->group([
+    'namespace' => 'App\Http\Controllers\Admin',
+    'prefix' => 'admin',
+], function ($router) {
+    require __DIR__.'/../routes/admin.php';
 });
 
 return $app;
