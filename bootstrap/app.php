@@ -77,6 +77,7 @@ $app->routeMiddleware([
 //    'auth' => App\Http\Middleware\Authenticate::class,
     'custom-jwt-user'  => App\Http\Middleware\CustomJWTUser::class,
     'custom-jwt-agent' => App\Http\Middleware\CustomJWTAgent::class,
+    'admin-authentication' => App\Http\Middleware\Admin\Authenticate::class
 ]);
 
 /*
@@ -128,6 +129,7 @@ $app->router->group([
 $app->router->group([
     'namespace' => 'App\Http\Controllers\Admin',
     'prefix' => 'admin',
+    'as' => 'admin'
 ], function ($router) {
     require __DIR__.'/../routes/admin.php';
 });
