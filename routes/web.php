@@ -14,3 +14,8 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'company', 'as' => 'company'], function () use ($router) {
+    $router->get('/create', ['as' => 'create', 'uses' => 'CompanyController@create']);
+    $router->post('/', ['as' => 'store', 'uses' => 'CompanyController@store']);
+});

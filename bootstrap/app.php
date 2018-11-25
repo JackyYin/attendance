@@ -115,6 +115,7 @@ $app->register(\Illuminate\Session\SessionServiceProvider::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers\Web',
+    'as' => 'web'
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
