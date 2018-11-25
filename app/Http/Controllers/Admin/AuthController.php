@@ -15,7 +15,7 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin/staff';
+    protected $redirectTo = '/admin';
 
     public function __construct(Request $request)
     {
@@ -64,6 +64,6 @@ class AuthController extends Controller
         }
 
         $request->session()->put('login_admin_'.md5('Illuminate\Auth\Guard'), $user->id);
-        return redirect()->route('admin.index');
+        return redirect($this->redirectTo);
     }
 }
