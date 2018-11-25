@@ -55,6 +55,10 @@ class Company extends Model implements AuthenticatableContract, AuthorizableCont
         return $this->hasMany(Location::class, 'company_id', 'id');
     }
 
+    public function contactPersons()
+    {
+        return $this->hasMany(CompanyContactPerson::class, 'company_id', 'id');
+    }
     public function correspondingDepartment()
     {
         return $this->departments()->master()->first();
