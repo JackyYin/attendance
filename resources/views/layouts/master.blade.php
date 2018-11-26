@@ -4,6 +4,7 @@
     </head>
     <body>
         <div class="container" style="padding-top: 20px">
+            @include('layouts.messages')
             @yield('content')
         </div>
 
