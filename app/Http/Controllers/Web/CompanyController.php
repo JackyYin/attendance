@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\CompanyContactPerson;
 use App\Models\CompanyProfile;
 use DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -49,7 +50,8 @@ class CompanyController extends Controller
 
         try {
             $company = Company::create([
-                'tax_id_number' => $request->tax_id_number
+                'tax_id_number' => $request->tax_id_number,
+                'password' => Hash::make($request->password)
             ]);
 
             $company->profile()->create([
