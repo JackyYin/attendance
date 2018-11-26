@@ -17,6 +17,7 @@ $factory->define(App\Models\Company::class, function (Faker\Generator $faker) {
     $faker = Faker\Factory::create('zh_TW');
     return [
         'tax_id_number' => $faker->VAT,
+        'password' => Hash::make(12345678)
     ];
 });
 

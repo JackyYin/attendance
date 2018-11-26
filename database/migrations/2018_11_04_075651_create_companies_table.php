@@ -16,6 +16,7 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('tax_id_number')->unique()->comment('統一編號');
+            $table->string('password')->nullable();
         });
     }
 
