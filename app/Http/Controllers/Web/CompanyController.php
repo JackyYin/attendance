@@ -24,6 +24,11 @@ class CompanyController extends Controller
         view()->share('session', $session);
     }
 
+    public function index()
+    {
+        return view('web.pages.company.index')->with('header', true);
+    }
+
     public function create()
     {
         return view('web.pages.company.create');

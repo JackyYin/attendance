@@ -12,7 +12,8 @@
 */
 
 $router->group(['middleware' => 'web-authentication:company'], function () use ($router) {
-    $router->get('/', function () use ($router) {
+    $router->get('/', ['as' => 'company.index', 'uses' => 'CompanyController@index']);
+    $router->get('/version', function () use ($router) {
         return $router->app->version();
     });
 });

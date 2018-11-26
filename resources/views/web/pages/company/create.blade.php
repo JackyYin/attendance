@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('web.layouts.master')
 
 @section('content')
     <form action="{{ route('web.company.store') }}" method="post">
