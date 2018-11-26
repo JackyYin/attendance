@@ -36,7 +36,8 @@ class CompanyController extends Controller
                 'name' => 'required|max:50',
                 'contact_person' => 'required|max:50',
                 'contact_phone_number' => 'required|max:20',
-                'contact_email' => 'required|email'
+                'contact_email' => 'required|email',
+                'password' => 'required|confirmed|min:6'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             dump($e->getResponse()->original);
@@ -78,7 +79,7 @@ class CompanyController extends Controller
             return redirect()->route('web.company.create');
         }
 
-        $request->session()->put('login_company_'.md5('Illuminate\Auth\Guard'), $company->id);
+        $request->session()->put('login_web_company_'.md5('Illuminate\Auth\Guard'), $company->id);
         return redirect('/');
     }
 }

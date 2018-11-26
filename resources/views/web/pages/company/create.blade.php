@@ -37,6 +37,14 @@
             <label>聯絡信箱</label>
             <input type="email" name="contact_email" class="form-control">
         </div>
+        <div class="form-group">
+            <label>密碼</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>確認密碼</label>
+            <input type="password" name="password_confirmation" class="form-control">
+        </div>
         <button type="submit" class="btn btn-primary">註冊</button>
     </form>
 
