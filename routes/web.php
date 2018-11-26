@@ -11,11 +11,15 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->group(['middleware' => 'web-authentication:company'], function () use ($router) {
+    $router->get('/', function () use ($router) {
+        return $router->app->version();
+    });
 });
 
 $router->group(['prefix' => 'company', 'as' => 'company'], function () use ($router) {
     $router->get('/create', ['as' => 'create', 'uses' => 'CompanyController@create']);
     $router->post('/', ['as' => 'store', 'uses' => 'CompanyController@store']);
+    $router->get('/login', ['as' => 'login', 'uses' => 'Company\AuthController@login']);
+    $router->post('/authenticate', ['as' => 'authenticate', 'uses' => 'Company\AuthController@authenticate']);
 });
