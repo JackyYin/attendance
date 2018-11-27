@@ -75,7 +75,7 @@ $app->middleware([
 
 $app->routeMiddleware([
 //    'auth' => App\Http\Middleware\Authenticate::class,
-    'custom-jwt-user'  => App\Http\Middleware\CustomJWTUser::class,
+    'custom-jwt'  => App\Http\Middleware\CustomJWT::class,
     'custom-jwt-agent' => App\Http\Middleware\CustomJWTAgent::class,
     'admin-authentication' => App\Http\Middleware\Admin\Authenticate::class,
     'web-authentication' => App\Http\Middleware\Web\Authenticate::class,

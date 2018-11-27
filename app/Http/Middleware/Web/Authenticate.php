@@ -35,8 +35,7 @@ class Authenticate
             return redirect()->route('web.'.$role.'.login');
         }
 
-        $model = strtoupper($role[0]).substr($role, 1, strlen($role) - 1);
-        $model = "App\\Models\\".$model;
+        $model = "App\\Models\\".ucfirst($role);
         dump($model);
 
         if (! $user = $model::find($id)) {

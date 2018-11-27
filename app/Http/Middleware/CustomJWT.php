@@ -9,15 +9,16 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\JWTAuth;
 
-class CustomJWTUser
+class CustomJWT
 {
-    const MODEL = User::class;
     /**
      * The authentication guard factory instance.
      *
      * @var \Tymon\JWTAuth\JWTAuth
      */
     protected $jwt;
+
+    protected $model;
 
     /**
      * Create a new middleware instance.
@@ -37,12 +38,15 @@ class CustomJWTUser
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
+        $upperRole = ucfirst($role);
+        $this->model = "App\\Models\\".$upperRole;
+
         if (! $token = $this->jwt->setRequest($request)->getToken()) {
             return response()->json([
                 'auth' => [
-                    'User Token Not Provided.'
+                    $upperRole.' Token Not Provided.'
                 ]
             ], 401);
         }
@@ -52,13 +56,13 @@ class CustomJWTUser
         } catch (TokenExpiredException $e) {
             return response()->json([
                 'auth' => [
-                    'User Token Expired.'
+                    $upperRole.' Token Expired.'
                 ]
             ], 401);
         } catch (TokenBlacklistedException $e) {
             return response()->json([
                 'auth' => [
-                    'User Token Invalidated.'
+                    $upperRole.' Token Invalidated.'
                 ]
             ], 401);
         } catch (JWTException $e) {
@@ -75,10 +79,10 @@ class CustomJWTUser
             ], 401);
         }
 
-        if ($this->jwt->getPayload()->get('model') !== self::MODEL) {
+        if ($this->jwt->getPayload()->get('model') !== $this->model) {
             return response()->json([
                 'auth' => [
-                    'User Token Model Type Error.'
+                    $upperRole.' Token Model Type Error.'
                 ]
             ], 401);
         }
@@ -86,7 +90,7 @@ class CustomJWTUser
         if (!$user) {
             return response()->json([
                 'auth' => [
-                   'User Not Found.'
+                   $upperRole.' Not Found.'
                 ]
             ], 401);
         }
