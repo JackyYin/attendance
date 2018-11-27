@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Setup Full Docker Image Name In Workspace
           command: |
-            RELEASE_TAG=$(/usr/bin/env git describe --abbrev=0).$CIRCLE_BUILD_NUM
+            RELEASE_TAG=$(/usr/bin/env git describe --always --abbrev=0).$CIRCLE_BUILD_NUM
             FULL_DOCKER_IMAGE_NAME=$REGISTRY_HOST/$DOCKER_IMAGE:$RELEASE_TAG
             mkdir -p /tmp/shared && touch /tmp/shared/env
             echo "export FULL_DOCKER_IMAGE_NAME=$FULL_DOCKER_IMAGE_NAME" >> /tmp/shared/env
