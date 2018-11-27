@@ -1,0 +1,75 @@
+version: 2.1
+
+orbs:
+  shellcheck: circleci/shellcheck@1.2.0
+
+executors:
+  basic:
+    docker:
+      - image: circleci/buildpack-deps:stable
+
+jobs:
+
+  build:
+    executor: basic
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Setup Full Docker Image Name In Workspace
+          command: |
+            RELEASE_TAG=$(/usr/bin/env git describe --abbrev=0).$CIRCLE_BUILD_NUM
+            FULL_DOCKER_IMAGE_NAME=$REGISTRY_HOST/$DOCKER_IMAGE:$RELEASE_TAG
+            mkdir -p /tmp/shared && touch /tmp/shared/env
+            echo "export FULL_DOCKER_IMAGE_NAME=$FULL_DOCKER_IMAGE_NAME" >> /tmp/shared/env
+      - run:
+          name: Build Docker Image And Push
+          command: |
+            echo $REGISTRY_PASSWORD | docker login $REGISTRY_HOST -u $REGISTRY_USER --password-stdin
+            source /tmp/shared/env
+            docker build -t $FULL_DOCKER_IMAGE_NAME .
+            docker push $FULL_DOCKER_IMAGE_NAME
+      - persist_to_workspace:
+          root: /tmp/shared
+          paths:
+            - env
+
+  release:
+    executor: basic
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/shared
+      - run:
+          name: Update Stack in Docker Swarm
+          command: |
+            source /tmp/shared/env
+            ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST \<<EOF
+              echo $REGISTRY_PASSWORD | docker login $REGISTRY_HOST -u $REGISTRY_USER --password-stdin
+              docker service update --with-registry-auth --image $FULL_DOCKER_IMAGE_NAME $DOCKER_STACK_SERVICE
+            EOF
+      - run:
+          name: Release Success
+          when: on_success
+          command: sh ./.circleci/notify_on_success.sh
+      - run:
+          name: Release Failed
+          when: on_fail
+          command: sh ./.circleci/notify_on_fail.sh
+
+workflows:
+  version: 2.1
+  deployment:
+    jobs:
+      - shellcheck/check
+      - build:
+          requires:
+            - shellcheck/check
+      - audit:
+          type: approval
+          requires:
+            - build
+      - release:
+          requires:
+            - audit
