@@ -7,8 +7,9 @@ use App\Models\Company;
 use App\Models\CompanyContactPerson;
 use App\Models\CompanyProfile;
 use DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\JWTAuth;
 
 class CompanyController extends Controller
 {
@@ -17,21 +18,9 @@ class CompanyController extends Controller
      *
      * @return void
      */
-    public function __construct(Request $request)
+    public function __construct(JWTAuth $jwt)
     {
-        $session = $request->session();
-
-        view()->share('session', $session);
-    }
-
-    public function index()
-    {
-        return view('web.pages.company.index')->with('header', true);
-    }
-
-    public function create()
-    {
-        return view('web.pages.company.create');
+        $this->jwt = $jwt;
     }
 
     public function store(Request $request)
@@ -47,8 +36,7 @@ class CompanyController extends Controller
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             dump($e->getResponse()->original);
-            $request->session()->flash('danger', $e->getResponse()->original);
-            return redirect()->route('web.company.create');
+            return response()->json($e->getResponse()->original, 400);
         }
 
         DB::beginTransaction();
@@ -96,15 +84,31 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            $request->session()->flash('danger', [
-                'error' => [
-                    $e->getMessage()
-                ]
-            ]);
-            return redirect()->route('web.company.create');
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
         }
 
-        $request->session()->put('login_web_company_'.md5('Illuminate\Auth\Guard'), $company->id);
-        return redirect('/');
+        try {
+            if (! $token = $this->jwt->fromUser($company)) {
+                return response()->json([
+                    'auth' => [
+                        'invalid_credentials'
+                    ]
+                ], 401);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'auth' => [
+                    'could_not_create_token'
+                ]
+            ], 401);
+        }
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+            'expires_in'   => $this->jwt->factory()->getTTL() * 60
+        ]);
     }
 }
