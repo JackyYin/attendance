@@ -66,10 +66,6 @@ workflows:
       - build:
           requires:
             - shellcheck/check
-      - audit:
-          type: approval
-          requires:
-            - build
       - release:
           requires:
-            - audit
+            - build
