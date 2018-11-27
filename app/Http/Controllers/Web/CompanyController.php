@@ -69,8 +69,26 @@ class CompanyController extends Controller
                 'phone_number' => $request->contact_phone_number
             ]);
 
-            $company->departments()->create([
+            $department = $company->departments()->create([
                 'name' => $request->name
+            ]);
+
+            $department->roles()->createMany([
+                [
+                    'company_id' => $company->id,
+                    'name' => '主管',
+                    'priority' => 1
+                ],
+                [
+                    'company_id' => $company->id,
+                    'name' => '管理員',
+                    'priority' => 2
+                ],
+                [
+                    'company_id' => $company->id,
+                    'name' => '員工',
+                    'priority' => 3
+                ],
             ]);
 
             DB::commit();
