@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['middleware' => 'web-authentication:company'], function () use ($router) {
+$router->group(['middleware' => 'custom-jwt:company'], function () use ($router) {
     $router->get('/version', function () use ($router) {
         return $router->app->version();
     });

@@ -52,7 +52,7 @@ class CustomJWT
         }
 
         try {
-            $user = $this->jwt->authenticate($token);
+            $this->jwt->authenticate($token);
         } catch (TokenExpiredException $e) {
             return response()->json([
                 'auth' => [
@@ -79,7 +79,9 @@ class CustomJWT
             ], 401);
         }
 
-        if ($this->jwt->getPayload()->get('model') !== $this->model) {
+        $payload = $this->jwt->getPayload();
+
+        if ($payload->get('model') !== $this->model) {
             return response()->json([
                 'auth' => [
                     $upperRole.' Token Model Type Error.'
@@ -87,13 +89,15 @@ class CustomJWT
             ], 401);
         }
 
-        if (!$user) {
+        if (!$user = $this->model::find($payload->get('sub'))) {
             return response()->json([
                 'auth' => [
                    $upperRole.' Not Found.'
                 ]
             ], 401);
         }
+
+        dump($user);
 
         $request->merge([
             'user' => $user
