@@ -1,0 +1,81 @@
+version: "3.5"
+
+services:
+  web:
+    image: registry.larvata.tw/attendance:latest
+    networks:
+      - traefik_proxy_network
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_proxy_network"
+        - "traefik.frontend.rule=Host:attendance.larvata.tw"
+    environment:
+      - APP_ENV=$APP_ENV
+      - APP_DEBUG=$APP_DEBUG
+      - APP_KEY=$APP_KEY
+      - APP_TIMEZONE=$APP_TIMEZONE
+      - LOG_CHANNEL=$LOG_CHANNEL
+      - LOG_SLACK_WEBHOOK_URL=$LOG_SLACK_WEBHOOK_URL
+      - DB_CONNECTION=$DB_CONNECTION
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_DATABASE=$DB_DATABASE
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - REDIS_DB=$REDIS_DB
+      - REDIS_CACHE_DB=$REDIS_CACHE_DB
+      - QUEUE_CONNECTION=$QUEUE_CONNECTION
+      - SESSION_DRIVER=$SESSION_DRIVER
+      - SESSION_CONNECTION=$SESSION_CONNECTION
+      - SESSION_SECURE_COOKIE=$SESSION_SECURE_COOKIE
+      - JWT_SECRET=$JWT_SECRET
+
+  redis:
+    image: redis
+    networks:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - data-redis:/data
+
+volumes:
+  data-redis:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=files.larvata.tw,rw
+      device: :/docker_volumes/attendance/redis
+
+networks:
+  backend:
+    driver: overlay
+    attachable: true
+  traefik_proxy_network:
+    external: true
+    name: traefik_proxy_network
