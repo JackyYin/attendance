@@ -39,7 +39,7 @@ class Authenticate
         $model = "App\\Models\\".$model;
         dump($model);
 
-        if (! $model::find($id)) {
+        if (! $user = $model::find($id)) {
             $request->session()->flash('info', [
                 'auth' => [
                     'Please login again.'
@@ -47,6 +47,10 @@ class Authenticate
             ]);
             return redirect()->route('web.'.$role.'.login');
         }
+
+        $request->merge([
+            $role => $user
+        ]);
 
         return $next($request);
     }
