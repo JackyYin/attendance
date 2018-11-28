@@ -26,7 +26,22 @@ class UserProfile extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'id',
+        'user_id',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'on_board_date' => 'datetime:Y-m-d H:i:s',
+        'birth_date' => 'datetime:Y-m-d H:i:s',
+    ];
 
     /**
      * Indicates if the model should be timestamped.

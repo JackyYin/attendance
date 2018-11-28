@@ -34,6 +34,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'password',
+        'roles',
+        'department',
+        'company'
+    ];
+
+    protected $appends = [
+        'role_name',
+        'company_name',
+        'department_name'
     ];
 
     /**
@@ -96,4 +105,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(Attendance::class, 'user_id', 'id');
     }
 
+    public function getRoleNameAttribute()
+    {
+        return $this->roles->first()->name;
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return $this->company->profile->name;
+    }
+
+    public function getDepartmentNameAttribute()
+    {
+        return $this->department->name;
+    }
 }
