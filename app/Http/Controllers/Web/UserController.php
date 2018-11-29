@@ -27,19 +27,14 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'name' => 'required',
-                'email' => 'required|email',
-                'birth_date' => 'required|date_format:Y-m-d',
-                'on_board_date' => 'required|date_format:Y-m-d',
-                'department' => 'exists:departments,id',
-                'role' => 'exists:roles,id'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            dump($e->getResponse()->original);
-            return response()->json($e->getResponse()->original, 400);
-        }
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'birth_date' => 'required|date_format:Y-m-d',
+            'on_board_date' => 'required|date_format:Y-m-d',
+            'department' => 'exists:departments,id',
+            'role' => 'exists:roles,id'
+        ]);
 
         DB::beginTransaction();
 

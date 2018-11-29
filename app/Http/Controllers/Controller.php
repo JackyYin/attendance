@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -38,4 +40,17 @@ class Controller extends BaseController
 
         return true;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildFailedValidationResponse(Request $request, array $errors)
+    {
+        if (isset(static::$responseBuilder)) {
+            return call_user_func(static::$responseBuilder, $request, $errors);
+        }
+
+        return new JsonResponse($errors, JsonResponse::HTTP_BAD_REQUEST);
+    }
+
 }
