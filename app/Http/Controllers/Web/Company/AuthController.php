@@ -2,31 +2,15 @@
 
 namespace App\Http\Controllers\Web\Company;
 
-use App\Models\Company;
 use App\Http\Controllers\Controller;
+use App\Models\Company;
+use App\Traits\Auth\JWTAuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
-
-    public function __construct(Request $request)
-    {
-        $session = $request->session();
-
-        view()->share('session', $session);
-    }
-
-    public function login()
-    {
-        return view('web.pages.company.auth.login');
-    }
+    use JWTAuthenticatesUsers;
 
     /**
      * Handle an authentication attempt.
@@ -35,29 +19,54 @@ class AuthController extends Controller
      */
     public function authenticate(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'tax_id_number' => 'required|exists:companies,tax_id_number',
-                'password' => 'required|min:6'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            dump($e->getResponse()->original);
-            $request->session()->flash('danger', $e->getResponse()->original);
-            return redirect()->route('web.company.login');
+        $this->validateLogin($request);
+
+        $customClaims = [
+            'interface' => 'web'
+        ];
+
+        if ($token = $this->attemptLogin($request, $customClaims)) {
+            $this->jwt->setToken($token);
+            dump($this->jwt->getPayload());
+            return $this->sendLoginResponse($request, $token);
         }
 
-        $user = Company::where('tax_id_number', $request->tax_id_number)->first();
+        return $this->sendFailedLoginResponse($request);
+    }
 
-        if (!Hash::check($request->password, $user->password)) {
-            $request->session()->flash('danger', [
-                'password' => [
-                    'incorrect password'
-                ]
-            ]);
-            return redirect()->route('web.company.login');
-        }
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required|exists:companies,tax_id_number',
+            'password' => 'required|min:6'
+        ]);
+    }
 
-        $request->session()->put('login_web_company_'.md5('Illuminate\Auth\Guard'), $user->id);
-        return redirect($this->redirectTo);
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'tax_id_number';
+    }
+
+    /**
+     * Get the login model to be used by the controller.
+     *
+     * @return string
+     */
+    public function model()
+    {
+        return 'App\\Models\\Company';
     }
 }
