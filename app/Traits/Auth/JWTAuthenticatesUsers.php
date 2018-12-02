@@ -132,4 +132,26 @@ trait JWTAuthenticatesUsers
     {
         return 'App\\Models\\User';
     }
+    /**
+     * Refresh user's jwt token
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function refresh(Request $request)
+    {
+        if ($token = $this->attemptRefresh($request)) {
+            return $this->sendLoginResponse($request, $token);
+        }
+    }
+    /**
+     * Attempt to refresh user's token
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptRefresh(Request $request)
+    {
+        return $this->jwt->refresh();
+    }
 }

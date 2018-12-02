@@ -34,6 +34,13 @@ class AuthController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    public function me(Request $request)
+    {
+        return response()->json([
+            'company' => $request->user
+        ]);
+    }
+
     /**
      * Validate the user login request.
      *
