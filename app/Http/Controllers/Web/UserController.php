@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'birth_date' => 'required|date_format:Y-m-d',
             'on_board_date' => 'required|date_format:Y-m-d',
             'department' => 'exists:departments,id',
@@ -44,7 +44,7 @@ class UserController extends Controller
                 'department_id' => $request->filled('department') ?
                 $request->department->id : $request->user->correspondingDepartment()->id,
                 'email' => $request->email,
-                'password' => Hash::make(12345678)
+                'password' => Hash::make(Carbon::parse($request->birth_date)->format('Ymd'))
             ]);
 
             $user->profile()->create([
