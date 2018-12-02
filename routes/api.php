@@ -24,7 +24,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 });
 
 $router->group(['middleware' => 'custom-jwt:user'], function () use ($router) {
-    $router->group(['prefix' => 'attendance'], function () use ($router) {
+    $router->group(['prefix' => 'attendances'], function () use ($router) {
         $router->post('gps', ['uses' => 'AttendanceController@gps']);
         $router->post('wifi', ['uses' => 'AttendanceController@wifi']);
     });
