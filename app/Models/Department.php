@@ -26,7 +26,10 @@ class Department extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'parent_id',
+        'company_id'
+    ];
 
     /**
      * Indicates if the model should be timestamped.

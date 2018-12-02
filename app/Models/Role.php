@@ -26,7 +26,12 @@ class Role extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'company_id',
+        'department_id',
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * Indicates if the model should be timestamped.

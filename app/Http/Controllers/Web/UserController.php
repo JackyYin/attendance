@@ -23,6 +23,13 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        $departments = $request->user->departments()->with(['roles' => function ($query) {
+            $query->orderBy('priority');
+        }])->whereNotNull('parent_id')->get();
+
+        return response()->json([
+            'departments' => $departments
+        ]);
     }
 
     public function store(Request $request)
