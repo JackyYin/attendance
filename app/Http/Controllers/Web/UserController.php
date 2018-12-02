@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Models\Role;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Hash;
@@ -43,13 +44,26 @@ class UserController extends Controller
             'role' => 'exists:roles,id'
         ]);
 
+        if ($request->filled('department')) {
+            $department = $request->user->departments()->where('id', $request->department)->first();
+
+            if (!$department) {
+                return response()->json([
+                    'department' => [
+                        '公司內無此部門'
+                    ]
+                ]);
+            }
+        } else {
+            $department = $request->user->correspondingDepartment();
+        }
+
         DB::beginTransaction();
 
         try {
             $user = User::create([
                 'company_id'    => $request->user->id,
-                'department_id' => $request->filled('department') ?
-                $request->department->id : $request->user->correspondingDepartment()->id,
+                'department_id' => $department->id,
                 'email' => $request->email,
                 'password' => Hash::make(Carbon::parse($request->birth_date)->format('Ymd'))
             ]);
@@ -63,12 +77,23 @@ class UserController extends Controller
             ]);
 
             if ($request->filled('role')) {
-                $user->roles()->attach($request->role);
-            } else {
-                $role = $user->department->roles()->max('priority');
+                // 檢查部門內是否有此角色
+                $role = Role::where('department_id', $department->id)->where('id', $request->role)->first();
 
-                $user->roles()->attach($role);
+                if (!$role) {
+                    return response()->json([
+                        'role' => [
+                            "部門內無此角色"
+                        ]
+                    ], 400);
+                }
+
+            } else {
+                // 預設給最小權限
+                $role = $user->department->roles()->max('priority');
             }
+
+            $user->roles()->attach($role);
 
             DB::commit();
 
