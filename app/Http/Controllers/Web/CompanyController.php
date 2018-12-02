@@ -25,19 +25,14 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'tax_id_number' => 'required|unique:companies,tax_id_number',
-                'name' => 'required|max:50',
-                'contact_person' => 'required|max:50',
-                'contact_phone_number' => 'required|max:20',
-                'contact_email' => 'required|email',
-                'password' => 'required|confirmed|min:6'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            dump($e->getResponse()->original);
-            return response()->json($e->getResponse()->original, 400);
-        }
+        $this->validate($request, [
+            'tax_id_number' => 'required|unique:companies,tax_id_number',
+            'name' => 'required|max:50',
+            'contact_person' => 'required|max:50',
+            'contact_phone_number' => 'required|max:20',
+            'contact_email' => 'required|email',
+            'password' => 'required|confirmed|min:6'
+        ]);
 
         DB::beginTransaction();
 
