@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
                 $table->increments('id');
                 $table->unsignedInteger('company_id');
                 $table->string('email');
-                $table->string('password')->nullable();
+                $table->string('password');
 
                 $table->foreign('company_id')
                     ->references('id')->on('companies')
