@@ -53,7 +53,8 @@ RUN apt-get update \
     && apt-get remove -y --purge software-properties-common
 
 # configurations
-COPY ./config/docker/nginx.conf  /etc/nginx/nginx.conf
+COPY ./config/docker/nginx.conf     /etc/nginx/nginx.conf
+COPY ./config/docker/laravels.conf  /etc/nginx/conf.d/laravels.conf
 COPY ./config/docker/php.ini     /etc/php/7.3/cli/php.ini
 COPY ./config/docker/redis.ini   /etc/php/7.3/mods-available/redis.ini
 COPY ./config/docker/rdkafka.ini /etc/php/7.3/mods-available/rdkafka.ini
