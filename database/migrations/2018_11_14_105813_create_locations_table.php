@@ -24,7 +24,7 @@ class CreateLocationsTable extends Migration
                 $table->string('address');
                 $table->unsignedInteger('legal_distance')->default(100)->comment('允許打卡距離(公尺)');
                 $table->unsignedInteger('created_at');
-                $table->unsignedInteger('updated_at'));
+                $table->unsignedInteger('updated_at');
 
                 $table->foreign('company_id')
                     ->references('id')->on('companies')
