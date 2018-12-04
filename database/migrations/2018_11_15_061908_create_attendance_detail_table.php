@@ -21,8 +21,8 @@ class CreateAttendanceDetailTable extends Migration
                 $table->string('longitude', 50)->nullable();
                 $table->string('wifi_bssid')->nullable();
                 $table->unsignedTinyInteger('via')->nullable();
-                $table->unsignedInteger('created_at')->nullable();
-                $table->unsignedInteger('updated_at')->nullable();
+                $table->unsignedInteger('created_at');
+                $table->unsignedInteger('updated_at');
 
                 $table->foreign('attendance_id')
                     ->references('id')->on('attendances')
