@@ -20,7 +20,8 @@ $router->group(['middleware' => 'custom-jwt:company'], function () use ($router)
         $router->post('/logout', ['as' => 'logout', 'uses' => 'Company\AuthController@logout']);
         $router->post('/refresh', ['as' => 'refresh', 'uses' => 'Company\AuthController@refresh']);
 
-        $router->put('/locations', ['as' => 'location', 'uses' => 'Company\LocationController@update']);
+        $router->put('/locations', ['uses' => 'Company\LocationController@update']);
+        $router->post('/networks', ['uses' => 'Company\NetworkController@store']);
     });
     $router->group(['prefix' => 'users', 'as' => 'user'], function () use ($router) {
         $router->get('/create', ['as' => 'create', 'uses' => 'UserController@create']);

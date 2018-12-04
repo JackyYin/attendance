@@ -26,7 +26,12 @@ class Network extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'department_id',
+        'company_id',
+        'created_at',
+        'updated_at'
+    ];
 
     /**
      * Indicates if the model should be timestamped.
