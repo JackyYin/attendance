@@ -16,7 +16,7 @@ logs:
 
 reload:
 	$(SOURCE_ENV) \
-	docker exec -it $$DOCKER_CONTAINER_NAME php artisan swoole:http reload
+	docker exec -it $$DOCKER_CONTAINER_NAME php artisan laravels reload
 
 migrate:
 	$(SOURCE_ENV) \
