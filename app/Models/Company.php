@@ -32,7 +32,9 @@ class Company extends Model implements AuthenticatableContract, AuthorizableCont
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'password'
+    ];
 
     /**
      * Indicates if the model should be timestamped.
