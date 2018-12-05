@@ -1,21 +1,39 @@
-# Lumen PHP Framework
+## 開發環境
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+### 1. 環境變數檔配置
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+  ```sh
+  cp .env.sample .env
+  ```
 
-## Official Documentation
+  * 請編輯 .env 檔案內容以符合自有開發環境，請確實掌握每個環境變數的意義。
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+### 2. 建構 Docker Image
 
-## Security Vulnerabilities
+  ```sh
+  docker build --rm -t attendance .
+  ```
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+### 3. 啟動本地開發環境
 
-## License
+  ```sh
+  make up
+  ```
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+### 4. 重啟容器
+
+  1. 執行 `make down` 清除容器與橋接器
+  2. 執行 `make up` 重新啟動容器
+  3. :tada:
+
+### 附錄
+
+:bangbang: 若沒有使用nginx-proxy, 請將docker-compose 改為port-mapping模式 :bangbang: 
+
+#### 常用指令
+
+  指令                                           | 描述
+  ----                                           | ----
+  `make reload`                                  | reload lumen
+  `make logs`                                    | show docker-compose logs
+
