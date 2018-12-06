@@ -90,7 +90,9 @@ class UserController extends Controller
 
             } else {
                 // 預設給最小權限
-                $role = $user->department->roles()->max('priority');
+                // priority 越大, 權限越小
+                $priority = $user->department->roles()->max('priority');
+                $role = $user->department->roles()->where('priority', $priority)->first();
             }
 
             $user->roles()->attach($role);
