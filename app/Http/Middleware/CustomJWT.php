@@ -109,8 +109,6 @@ class CustomJWT
             ], 401);
         }
 
-        dump($user);
-
         $request->merge([
             'user' => $user
         ]);
