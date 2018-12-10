@@ -41,12 +41,20 @@ class CustomJWTAgent
     {
         $authorization = preg_replace('/\s+/', ' ', $request->header('Authorization'));
         $authorization = explode(" ", $authorization);
-        if (array_key_exists(1, $authorization)) {
-            $this->jwt->setToken($authorization[1]);
-        } else {
+        try {
+            if (array_key_exists(1, $authorization)) {
+                $this->jwt->setToken($authorization[1]);
+            } else {
+                return response()->json([
+                    'auth' => [
+                        'Agent Token Not Provided.'
+                    ]
+                ], 401);
+            }
+        } catch (\Exception $e) {
             return response()->json([
                 'auth' => [
-                    $upperRole.' Token Not Provided.'
+                    $e->getMessage()
                 ]
             ], 401);
         }
