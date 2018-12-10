@@ -42,8 +42,18 @@ class CustomJWT
     {
         $upperRole = ucfirst($role);
         $this->model = "App\\Models\\".$upperRole;
-        $reqToken = explode(" ", $request->header('Authorization'))[1];
-        $this->jwt->setToken($reqToken);
+
+        $authorization = preg_replace('/\s+/', ' ', $request->header('Authorization'));
+        $authorization = explode(" ", $authorization);
+        if (array_key_exists(1, $authorization)) {
+            $this->jwt->setToken($authorization[1]);
+        } else {
+            return response()->json([
+                'auth' => [
+                    $upperRole.' Token Not Provided.'
+                ]
+            ], 401);
+        }
 
         if (! $token = $this->jwt->getToken()) {
             return response()->json([
