@@ -49,7 +49,8 @@ RUN apt-get update \
     ) \
     && pecl install redis \
     rdkafka \
-    swoole \ 
+    swoole \
+    inotify \
     && apt-get remove -y --purge software-properties-common
 
 # configurations
@@ -59,11 +60,16 @@ COPY ./config/docker/php.ini     /etc/php/7.3/cli/php.ini
 COPY ./config/docker/redis.ini   /etc/php/7.3/mods-available/redis.ini
 COPY ./config/docker/rdkafka.ini /etc/php/7.3/mods-available/rdkafka.ini
 COPY ./config/docker/swoole.ini  /etc/php/7.3/mods-available/swoole.ini
+COPY ./config/docker/inotify.ini /etc/php/7.3/mods-available/inotify.ini
 
 RUN ln -s /etc/php/7.3/mods-available/redis.ini 20-redis.ini \
     && ln -s /etc/php/7.3/mods-available/rdkafka.ini 20-rdkafka.ini \
     && ln -s /etc/php/7.3/mods-available/swoole.ini 20-swoole.ini \
-    && phpenmod redis rdkafka swoole
+    && ln -s /etc/php/7.3/mods-available/inotify.ini 20-inotify.ini \
+    && phpenmod redis \
+    rdkafka \
+    swoole \
+    inotify
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
