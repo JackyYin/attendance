@@ -39,7 +39,9 @@ class CustomJWTAgent
      */
     public function handle($request, Closure $next)
     {
-        if (! $token = $this->jwt->setRequest($request)->getToken()) {
+        $reqToken = explode(" ", $request->header('Authorization'))[1];
+        $this->jwt->setToken($reqToken);
+        if (! $token = $this->jwt->getToken()) {
             return response()->json([
                 'auth' => [
                     'Agent Token Not Provided.'
