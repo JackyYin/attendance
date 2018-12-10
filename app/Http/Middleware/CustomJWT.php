@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
+use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -43,18 +44,8 @@ class CustomJWT
         $upperRole = ucfirst($role);
         $this->model = "App\\Models\\".$upperRole;
 
-        $authorization = preg_replace('/\s+/', ' ', $request->header('Authorization'));
-        $authorization = explode(" ", $authorization);
         try {
-            if (array_key_exists(1, $authorization)) {
-                $this->jwt->setToken($authorization[1]);
-            } else {
-                return response()->json([
-                    'auth' => [
-                        $upperRole.' Token Not Provided.'
-                    ]
-                ], 401);
-            }
+            $this->setRequest($request, $upperRole);
         } catch (\Exception $e) {
             return response()->json([
                 'auth' => [
@@ -122,5 +113,22 @@ class CustomJWT
         ]);
 
         return $next($request);
+    }
+
+    private function setRequest(Request $request, $upperRole)
+    {
+        $header = preg_replace('/\s+/', ' ', $request->header('Authorization'));
+
+        $array = explode(" ", $header);
+
+        if (array_key_exists(1, $array)) {
+            $this->jwt->setToken($array[1]);
+        } else {
+            $message = $upperRole.' Token Not Provided.';
+
+            throw new \Exception($message);
+        }
+
+        return true;
     }
 }
