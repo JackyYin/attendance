@@ -117,12 +117,10 @@ class CustomJWT
 
     private function setRequest(Request $request, $upperRole)
     {
-        $header = preg_replace('/\s+/', ' ', $request->header('Authorization'));
+        $header = $request->header('Authorization');
 
-        $array = explode(" ", $header);
-
-        if (array_key_exists(1, $array)) {
-            $this->jwt->setToken($array[1]);
+        if($header && preg_match('/bearer\s*(\S+)\b/i', $header, $matches)) {
+            $this->jwt->setToken($matches[1]);
         } else {
             $message = $upperRole.' Token Not Provided.';
 
