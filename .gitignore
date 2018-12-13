@@ -6,3 +6,4 @@ Homestead.yaml
 *.swp
 *.swo
 *.log
+*.pid
