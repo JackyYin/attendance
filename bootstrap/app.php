@@ -28,6 +28,7 @@ $app->configure('queue');
 $app->configure('auth');
 $app->configure('jwt');
 $app->configure('session');
+$app->configure('cache');
 
 $app->withFacades();
 
