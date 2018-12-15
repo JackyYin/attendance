@@ -112,7 +112,12 @@ class AuthController extends Controller
             'expires_in'   => $this->jwt->factory()->getTTL() * 60
         ]);
     }
-
+    /**
+     * @OA\Get(
+     *     path="/api/auth/me",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     */
     public function me(Request $request)
     {
         return response()->json([

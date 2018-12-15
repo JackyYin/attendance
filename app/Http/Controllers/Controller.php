@@ -10,6 +10,21 @@ use Tymon\JWTAuth\JWTAuth;
 
 class Controller extends BaseController
 {
+    /**
+     * @OA\Info(
+     *   title="Attendance API",
+     *   description="API for both mobile and frontend pages",
+     *   version="1",
+     *   @OA\Contact(
+     *     name="Jacky Yin",
+     *     email="jjyyg1123@gmail.com",
+     *   ),
+     *   @OA\License(
+     *     name="Apache 2.0",
+     *     url="http://www.apache.org/licenses/LICENSE-2.0.html",
+     *   )
+     * )
+     */
     protected $jwt;
 
     /**

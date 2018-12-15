@@ -29,6 +29,7 @@ $app->configure('auth');
 $app->configure('jwt');
 $app->configure('session');
 $app->configure('cache');
+$app->configure('swagger-lume');
 
 $app->withFacades();
 
@@ -105,6 +106,8 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
+
+$app->register(\SwaggerLume\ServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

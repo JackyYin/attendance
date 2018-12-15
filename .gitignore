@@ -1,4 +1,5 @@
 /vendor
+/storage/api-docs
 /.idea
 Homestead.json
 Homestead.yaml
