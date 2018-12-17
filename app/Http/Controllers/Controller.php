@@ -25,12 +25,8 @@ class Controller extends BaseController
      *   )
      * ),
      * @OA\Server(
-     *   url="attendance.localhost",
+     *   url=SWAGGER_LUME_CONST_HOST,
      *   description="Development server"
-     * ),
-     * @OA\Server(
-     *   url="attendance.larvata.tw",
-     *   description="Staging server"
      * )
      */
     protected $jwt;
