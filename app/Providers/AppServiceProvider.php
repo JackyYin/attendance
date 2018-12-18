@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,9 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->share('session', '');
-        if(env('FORCE_HTTPS')) {
-            URL::forceScheme('https');
-        }
+        $this->app['request']->server->set('HTTPS', env('FORCE_HTTPS'));
     }
 
     /**
